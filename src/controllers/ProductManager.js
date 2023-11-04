@@ -20,7 +20,7 @@ class ProductManager {
 
   async addProduct({ title, description, price, thumbnail, code, stock }) {
     try {
-      if (!title || !description || !price || !code || !stock) {
+      if (!title || !description || !price || !code || !stock) { // List of required values
         console.log("All values are required");
         throw new Error("All values are required");
       }
