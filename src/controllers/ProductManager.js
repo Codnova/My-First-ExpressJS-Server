@@ -11,18 +11,18 @@ class ProductManager {
       return JSON.parse(data);
     } catch (error) {
       if (error.code === "ENOENT") {
-        //Archivo no existe
+        // File doesn't exist
         return [];
       }
-      throw error;
+      throw new Error("Error loading the Products file");
     }
   }
 
-  async addProduct({title, description, price, thumbnail, code, stock}) {
+  async addProduct({ title, description, price, thumbnail, code, stock }) {
     try {
-      if (!title || !description || !price || !thumbnail || !code || !stock) {
-        console.log("Todos los valores son obligatorios");
-        throw new Error("Todos los valores son obligatorios");
+      if (!title || !description || !price || !code || !stock) {
+        console.log("All values are required");
+        throw new Error("All values are required");
       }
       let products = await this.getProducts();
       let id = 1;
@@ -39,16 +39,15 @@ class ProductManager {
         stock,
       };
       if (products.some((product) => product.code === newProduct.code)) {
-        console.log(`El código del producto ${newProduct.title} ya está en el arreglo`)
-        throw new Error(`El código del producto ${newProduct.title} ya está en el arreglo`);
+        console.log(`Product code ${newProduct.title} already exists in the array`);
+        throw new Error(`Product code ${newProduct.title} already exists in the array`);
       } else {
         products.push(newProduct);
         await fs.writeFile(this.path, JSON.stringify(products));
       }
-      
     } catch (error) {
-      console.error("Error agregando el producto: ", error.message);
-      throw error;
+      console.log("Error adding the product");
+      throw new Error("Error adding the product");
     }
   }
 
@@ -57,12 +56,12 @@ class ProductManager {
       let products = await this.getProducts();
       let productFound = products.find((product) => product.id === id);
       if (!productFound) {
-        console.log("No se encontró el producto con ID: ", id);
+        console.log("Product with ID not found: ", id);
       }
-      return productFound; //Retornamos el producto encontrado
+      return productFound; // Return the found product
     } catch (error) {
-      console.error("Error obteniendo el producto con ID: ", id);
-      throw error;
+      console.log("Error getting the product with ID: ", id);
+      throw new Error("Error getting the product with ID: ", id);
     }
   }
 
@@ -71,17 +70,17 @@ class ProductManager {
       let products = await this.getProducts();
       let index = products.findIndex((product) => product.id === id);
       if (index === -1) {
-        console.log("Producto no encontrado en removeProduct");
+        console.log("Product not found in removeProduct");
         return;
       } else {
-        console.log(`El producto ${products[index].title} ha sido borrado`);
+        console.log(`Product ${products[index].title} has been deleted`);
         products.splice(index, 1);
-        await fs.writeFile(this.path, JSON.stringify(products, null, 5)); //Guardamos los cambios en el archivo
-        return true
+        await fs.writeFile(this.path, JSON.stringify(products, null, 5)); // Save the changes to the file
+        return true;
       }
     } catch (error) {
-      console.error("Error borrando el producto con ID: ", id);
-      throw error;
+      console.log("Error deleting the product with ID: ", id);
+      throw new Error("Error deleting the product with ID: ", id);
     }
   }
 
@@ -94,31 +93,31 @@ class ProductManager {
         "thumbnail",
         "code",
         "stock",
-      ]; //Propiedades que están habilitadas para su modificación
+      ]; // Properties that are allowed for modification
       let products = await this.getProducts();
       let index = products.findIndex((product) => product.id === id);
       if (index === -1) {
-        console.log("Producto no encontrado en updateProduct");
-        return;
+        console.log("Product not found in updateProduct");
+        return false;
       } else {
         if (products.some((product) => product.code === object.code)) {
-          console.log(`El código del producto ${object.title} ya está en el arreglo`)
-          return false
+          console.log(`Product code ${object.title} already exists in the array`);
+          return false;
         } else {
           for (let key of Object.keys(object)) {
-            //Si las propiedades del objeto a actualizar están en la lista, los valores se reemplazan
+            // If the properties of the object to update are in the list, the values are replaced
             if (allowedProperties.includes(key)) {
               products[index][key] = object[key];
             }
           }
-          console.log(`El producto ${products[index].title} ha sido actualizado`);
-          await fs.writeFile(this.path, JSON.stringify(products, null, 5)); //Guardamos los cambios en el archivo
-          return true
+          console.log(`Product ${products[index].title} has been updated`);
+          await fs.writeFile(this.path, JSON.stringify(products, null, 5)); // Save the changes to the file
+          return true;
         }
       }
     } catch (error) {
-      console.error("No se actualizó el producto con ID: ", id);
-      throw error;
+      console.log("Product with ID not updated: ", id);
+      throw new Error("Product with ID not updated: ", id);
     }
   }
 }

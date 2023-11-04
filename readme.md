@@ -1,4 +1,4 @@
-# CoderHouse Backend eCommerce Project
+# CoderHouse eCommerce Backend Project
 
 A simple yet robust backend server built with Node.js and Express.js, demonstrating a RESTful API for product and cart management. 
 
