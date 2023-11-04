@@ -77,6 +77,7 @@ class ProductManager {
         console.log(`El producto ${products[index].title} ha sido borrado`);
         products.splice(index, 1);
         await fs.writeFile(this.path, JSON.stringify(products, null, 5)); //Guardamos los cambios en el archivo
+        return true
       }
     } catch (error) {
       console.error("Error borrando el producto con ID: ", id);
@@ -100,14 +101,20 @@ class ProductManager {
         console.log("Producto no encontrado en updateProduct");
         return;
       } else {
-        console.log(`El producto ${products[index].title} ha sido actualizado`);
-        for (let key of Object.keys(object)) {
-          //Si las propiedades del objeto a actualizar están en la lista, los valores se reemplazan
-          if (allowedProperties.includes(key)) {
-            products[index][key] = object[key];
+        if (products.some((product) => product.code === object.code)) {
+          console.log(`El código del producto ${object.title} ya está en el arreglo`)
+          return false
+        } else {
+          for (let key of Object.keys(object)) {
+            //Si las propiedades del objeto a actualizar están en la lista, los valores se reemplazan
+            if (allowedProperties.includes(key)) {
+              products[index][key] = object[key];
+            }
           }
+          console.log(`El producto ${products[index].title} ha sido actualizado`);
+          await fs.writeFile(this.path, JSON.stringify(products, null, 5)); //Guardamos los cambios en el archivo
+          return true
         }
-        await fs.writeFile(this.path, JSON.stringify(products, null, 5)); //Guardamos los cambios en el archivo
       }
     } catch (error) {
       console.error("No se actualizó el producto con ID: ", id);
