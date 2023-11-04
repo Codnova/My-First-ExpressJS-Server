@@ -7,7 +7,7 @@ A simple yet robust backend server built with Node.js and Express.js, demonstrat
 Clone the repository and navigate to the project directory. Install the necessary dependencies using npm:
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/Codnova/My-First-ExpressJS-Server.git>
 cd <project-directory>
 npm install
 ```
@@ -17,7 +17,7 @@ npm install
 Start the server by executing the following command:
 
 ```bash
-npm start
+node ./app.js
 ```
 
 The server will start and listen on port 8080.
