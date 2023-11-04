@@ -4,7 +4,7 @@ const routerProducts = require('./routes/routes.products')
 
 //Definitions
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 const server = app.listen(PORT, ()=> console.log('Escuchando en puerto: ', PORT));
 
 //Methods
