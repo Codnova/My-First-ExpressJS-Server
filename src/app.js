@@ -1,6 +1,7 @@
 // Imports
 const express = require('express');
 const routerProducts = require('./routes/routes.products')
+const routerCarts = require('./routes/routes.carts')
 
 //Definitions
 const app = express();
@@ -19,3 +20,4 @@ app.get("/", (req, res) => { //Homepage
 });
 
 app.use('/api/products', routerProducts)
+app.use('/api/carts', routerCarts)
