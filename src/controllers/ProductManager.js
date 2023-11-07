@@ -5,7 +5,7 @@ class ProductManager {
     this.path = filePath;
   }
 
-  async getProducts() {
+  async getProducts() { // Retrieves the products in the database
     try {
       let data = await fs.readFile(this.path, "utf-8");
       return JSON.parse(data);
@@ -18,7 +18,7 @@ class ProductManager {
     }
   }
 
-  async addProduct({ title, description, price, thumbnail, code, stock }) {
+  async addProduct({ title, description, price, thumbnail, code, stock }) { // Adds a product to the database
     try {
       if (!title || !description || !price || !code || !stock) { // List of required values
         console.log("All values are required");
@@ -51,7 +51,7 @@ class ProductManager {
     }
   }
 
-  async getProductById(id) {
+  async getProductById(id) { // Returns the product if it exists
     try {
       let products = await this.getProducts();
       let productFound = products.find((product) => product.id === id);
@@ -65,7 +65,23 @@ class ProductManager {
     }
   }
 
-  async removeProduct(id) {
+  async checkProductById(id){ // Checks if a productId exists and returns true or false
+    try {
+      let products = await this.getProducts();
+      let productFound = products.find((product) => product.id === id);
+      if (!productFound) {
+        console.log("Product with ID not found: ", id);
+        return false
+      }
+      return true; // Return the true if product is found
+    } catch (error) {
+      console.log(error.message)
+      console.log("Error getting the product with ID: ", id);
+      throw new Error("Error getting the product with ID: ", id);
+    }
+  }
+
+  async removeProduct(id) { // Removes a product from the database
     try {
       let products = await this.getProducts();
       let index = products.findIndex((product) => product.id === id);
@@ -84,7 +100,7 @@ class ProductManager {
     }
   }
 
-  async updateProduct(id, object) {
+  async updateProduct(id, object) { // Updates a product in the database
     try {
       const allowedProperties = [
         "title",
